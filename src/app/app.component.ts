@@ -5,9 +5,12 @@ import { Observable, pipe, combineLatest } from 'rxjs';
 import { map, tap } from 'rxjs/operators'
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    template:`
+        <h1> rxjs combineLatest Demo</h1>
+        <pre>{{itemsAndRatings$ | async | json}}</pre>
+    
+    `
 })
 export class AppComponent implements OnInit{
     
@@ -18,12 +21,12 @@ export class AppComponent implements OnInit{
 
     constructor(private mockService:MockService){}
 
-
     ngOnInit(): void {
 
         this.items$ = this.mockService.getAllItems()
         this.ratings$ = this.mockService.getAllRatings()
 
+        // combina i valori di 2 observable restituendo un Observable di array di oggetti Item
         this.itemsAndRatings$ = combineLatest([this.items$, this.ratings$])
             .pipe(
                 map( ([items, ratings]) => {
@@ -36,17 +39,20 @@ export class AppComponent implements OnInit{
                         itemsRating.push(null)
                         
                         ratings.map( rating => {
-                            item.id == rating.itemId ? count++ : null
-                            item.id == rating.itemId ? totalRate += rating.rate : null
-                            item.id == rating.itemId ? itemsRating[index] = {...item, rating:totalRate, ratingCount:count} : null
+                            
+                            if(item.id == rating.itemId){
+                                count++
+                                totalRate += rating.rate
+                                itemsRating[index] = {...item, rating: totalRate, ratingCount:count}
+                            }
+
                         })
                         index++
                     })
 
                     return itemsRating
                 }),
-                map( (items:Item[]) => items.map( (item:Item) => ({...item, rating:item.rating / item.ratingCount}))),
-                tap( items => console.log(items))
+                map( (items:Item[]) => items.map( (item:Item) => ({...item, rating:Number((item.rating / item.ratingCount).toFixed(1))})))
             )
 
         this.itemsAndRatings$.subscribe()
