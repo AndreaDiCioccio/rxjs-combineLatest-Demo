@@ -1,4 +1,4 @@
-import { Item, Rating } from './models'
+import { Item, Rating } from './interfaces'
 
 export const items:Item[] = [
     {id:1, name:'macchina caffè espresso', price:60},

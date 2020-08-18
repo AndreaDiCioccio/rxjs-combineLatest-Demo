@@ -1,6 +1,6 @@
 import { MockService } from './mock.service';
 import { Component, OnInit } from '@angular/core';
-import { Item, ItemAndRating, Rating } from './models';
+import { Item, ItemAndRating, Rating } from './interfaces';
 import { Observable, pipe, combineLatest } from 'rxjs';
 import { map, tap } from 'rxjs/operators'
 
@@ -9,9 +9,9 @@ import { map, tap } from 'rxjs/operators'
     template:`
         <h1> rxjs combineLatest Demo</h1>
         <pre>{{itemsAndRatings$ | async | json}}</pre>
-    
     `
 })
+
 export class AppComponent implements OnInit{
     
     items$:Observable<Item[]>
@@ -54,8 +54,6 @@ export class AppComponent implements OnInit{
                 }),
                 map( (items:Item[]) => items.map( (item:Item) => ({...item, rating:Number((item.rating / item.ratingCount).toFixed(1))})))
             )
-
-        this.itemsAndRatings$.subscribe()
 
     }
 }

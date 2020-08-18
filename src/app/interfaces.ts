@@ -1,4 +1,4 @@
-export class Item{
+export interface Item{
     id:number
     name:string
     price:number
@@ -6,13 +6,13 @@ export class Item{
     ratingCount?:number
 }
 
-export class Rating{
+export interface Rating{
     id:number
     itemId:number
     rate:number
 }
 
-export class ItemAndRating extends Item{
+export interface ItemAndRating extends Item{
     rating:number
     ratingCount:number
 }
